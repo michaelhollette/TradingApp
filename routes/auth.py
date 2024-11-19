@@ -68,6 +68,6 @@ async def logout(token: str = Depends(oauth2_scheme)):
     # For stateless tokens, "logout" is effectively handled client-side by removing the token.
     return {"message": "Successfully logged out"}
 
-@router.get("/me")
+@router.get("/me", response_model = UserOutput)
 async def get_current_user_route(current_user: UserOutput = Depends(get_current_user)):
     return current_user

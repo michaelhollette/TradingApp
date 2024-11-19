@@ -19,6 +19,8 @@ class Transaction(TransactionInput, table=True):
 class TransactionOutput(TransactionInput):
     id: int
     timestamp: str
+    type: str   
+
 
 
 
