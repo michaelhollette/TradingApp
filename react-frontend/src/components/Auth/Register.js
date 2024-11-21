@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/Register.css";
+import logo from "../images/logo.png"; // Update with your logo file name
+
 
 function Register() {
     const [username, setUsername] = useState("");
@@ -12,7 +15,6 @@ function Register() {
         event.preventDefault();
         setError(null);
 
-        // Frontend validation
         if (!username || !password || !confirmPassword) {
             setError("All fields are required.");
             return;
@@ -45,36 +47,50 @@ function Register() {
     }
 
     return (
-        <div>
-            <h1>Register</h1>
-            <form onSubmit={handleRegister}>
-                {error && <p style={{ color: "red" }}>{error}</p>}
-                <div>
-                    <label>Username:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Confirm Password:</label>
-                    <input
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                </div>
-                <button type="submit">Register</button>
-            </form>
+        <div className="register-container">
+            {/* Logo Section */}
+            <div className="logo-section">
+                <img src={logo} alt="MultiTrader Logo" className="logo" />
+            </div>
+
+            {/* Register Form Section */}
+            <div className="register-form-section">
+                <h1 className="register-header">Register</h1>
+                {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+                <form className="register-form" onSubmit={handleRegister}>
+                    <div>
+                        <label>Username:</label>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>Password:</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>Confirm Password:</label>
+                        <input
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                    </div>
+                    <button type="submit">Register</button>
+                </form>
+                <button
+                    className="back-home-button"
+                    onClick={() => navigate("/")}
+                >
+                    Back to Home
+                </button>
+            </div>
         </div>
     );
 }

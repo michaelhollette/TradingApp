@@ -3,6 +3,8 @@ import {useState, useEffect} from 'react'
 import Homepage from './components/HomePage';
 import Register from "./components/Auth/Register";
 import Login from "./components/Auth/Login";
+import Portfolio from "./components/Portfolio/Portfolio";
+
 
 
 
@@ -31,6 +33,8 @@ function App() {
             <Route path ="/" element={<Homepage welcome ={welcome} />}/>
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+
         </Routes>
   </Router>
   

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/Login.css";
+import logo from "../images/logo.png"; 
 
 function Login() {
     const [username, setUsername] = useState("");
@@ -34,39 +36,51 @@ function Login() {
             }
 
             const data = await response.json();
-            // Store the token in localStorage for subsequent authenticated requests
             localStorage.setItem("accessToken", data.access_token);
-
             alert("Login successful!");
-            navigate("/"); // Redirect to homepage after login
+            navigate("/");
         } catch (err) {
             setError(err.message || "An unexpected error occurred.");
         }
     }
 
     return (
-        <div>
-            <h1>Login</h1>
-            <form onSubmit={handleLogin}>
-                {error && <p style={{ color: "red" }}>{error}</p>}
-                <div>
-                    <label>Username:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <button type="submit">Login</button>
-            </form>
+        <div className="login-container">
+            {/* Logo Section */}
+            <div className="logo-section">
+                <img src={logo} alt="MultiTrader Logo" className="logo" />
+            </div>
+
+            {/* Login Form Section */}
+            <div className="login-form-section">
+                <h1 className="login-header">Login</h1>
+                {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+                <form className="login-form" onSubmit={handleLogin}>
+                    <div>
+                        <label>Username:</label>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>Password:</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+                <button
+                    className="back-home-button"
+                    onClick={() => navigate("/")}
+                >
+                    Back to Home
+                </button>
+            </div>
         </div>
     );
 }
