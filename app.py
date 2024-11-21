@@ -32,7 +32,7 @@ app.add_middleware(
 #Define a function called welcome, that does nothing but return a dictionary with a single message
 def welcome():
     #Returns a friendly welcome message.
-    return {'message':f'Welcome the Trading Application'}
+    return {'message':f'Welcome to MultiTrader'}
 
 
 

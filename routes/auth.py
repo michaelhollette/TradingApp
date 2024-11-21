@@ -2,7 +2,7 @@ from fastapi import Depends, HTTPException, APIRouter
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 from starlette import status
-
+from pydantic import BaseModel
 from db import get_session
 from schemas import User, UserOutput
 
@@ -43,9 +43,16 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), # No argument 
             detail="Incorrect username or password"
         )
 
-   
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+
 @router.post("/register")
-async def register(username: str, password: str, session: Session = Depends(get_session)):
+async def register(request: RegisterRequest, session: Session = Depends(get_session)):
+    # Extract data from the request body
+    username = request.username
+    password = request.password
+    
     # Check if the username already exists
     query = select(User).where(User.username == username)
     existing_user = session.exec(query).first()
