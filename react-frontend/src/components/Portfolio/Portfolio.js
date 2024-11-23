@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import Navbar from "../Navbar"; // Import Navbar component
+
 import "../styles/Portfolio.css";
 
 function Portfolio() {
@@ -6,56 +8,70 @@ function Portfolio() {
     const [balance, setBalance] = useState(0);
     const [error, setError] = useState(null);
 
-    // Fetch the portfolio data from the backend
-    async function fetchPortfolio() {
+    async function fetchUserData() {
         try {
-            const response = await fetch("http://localhost:8000/api/portfolio/", {
+            // Fetch user data (including balance)
+            const userResponse = await fetch("http://localhost:8000/api/auth/me", {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
             });
 
-            if (!response.ok) {
+            if (!userResponse.ok) {
+                throw new Error("Failed to fetch user data");
+            }
+
+            const userData = await userResponse.json();
+            setBalance(userData.balance); // Update the balance
+
+            // Fetch portfolio data
+            const portfolioResponse = await fetch("http://localhost:8000/api/portfolio/", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+            });
+
+            if (!portfolioResponse.ok) {
                 throw new Error("Failed to fetch portfolio data");
             }
 
-            const data = await response.json();
-            setPortfolio(data);
-
-            // Extract the user's balance from the data
-            const userBalance = localStorage.getItem("userBalance"); // Replace with API call if balance is stored elsewhere
-            setBalance(userBalance || 0);
+            const portfolioData = await portfolioResponse.json();
+            setPortfolio(portfolioData);
         } catch (err) {
             setError(err.message);
         }
     }
 
-    // Calculate the total value of all stocks in the portfolio
     const calculateTotalValue = () => {
         return portfolio.reduce((total, stock) => total + stock.quantity * stock.price, 0).toFixed(2);
     };
 
     useEffect(() => {
-        fetchPortfolio();
+        fetchUserData();
     }, []);
 
     return (
+        <>
+        <Navbar/>
+                   
         <div className="portfolio-container">
             <h1>User Portfolio</h1>
             {error && <p style={{ color: "red" }}>{error}</p>}
             <table className="portfolio-table">
                 <thead>
                     <tr>
-                        <th>Stock</th>
+                        <th>Stock Symbol</th>
+                        <th>Company</th>
                         <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Value</th>
+                        <th>Average Price</th>
+                        <th>Total Price</th>
                     </tr>
                 </thead>
                 <tbody>
                     {portfolio.map((stock) => (
                         <tr key={stock.id}>
                             <td>{stock.stock}</td>
+                            <td>{stock.name}</td>
                             <td>{stock.quantity}</td>
                             <td>${stock.price.toFixed(2)}</td>
                             <td>${(stock.quantity * stock.price).toFixed(2)}</td>
@@ -64,16 +80,17 @@ function Portfolio() {
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colSpan="3">Total Stock Value</td>
+                        <td colSpan="4">Total Stock Value</td>
                         <td>${calculateTotalValue()}</td>
                     </tr>
                     <tr>
-                        <td colSpan="3">Balance</td>
+                        <td colSpan="4">Balance</td>
                         <td>${parseFloat(balance).toFixed(2)}</td>
                     </tr>
                 </tfoot>
             </table>
         </div>
+        </>
     );
 }
 

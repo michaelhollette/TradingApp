@@ -27,6 +27,8 @@ class TransactionOutput(TransactionInput):
 
 class Portfolio(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    name: str
+
     stock: str
     quantity: int
     price: float
@@ -35,6 +37,7 @@ class Portfolio(SQLModel, table=True):
 
 class PortfolioOutput(SQLModel):
     id: int
+    name: str
     stock: str
     quantity: int
     price: float

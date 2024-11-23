@@ -4,7 +4,9 @@ import Homepage from './components/HomePage';
 import Register from "./components/Auth/Register";
 import Login from "./components/Auth/Login";
 import Portfolio from "./components/Portfolio/Portfolio";
-
+import GetQuote from "./components/Portfolio/Quote"
+import BuyStock from "./components/Transactions/Buy";
+import SellStock from "./components/Transactions/Sell"
 
 
 
@@ -34,6 +36,9 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/quote" element={<GetQuote />} /> 
+            <Route path="/buy" element={<BuyStock />} /> 
+            <Route path ="/sell" element={<SellStock />} />
 
         </Routes>
   </Router>

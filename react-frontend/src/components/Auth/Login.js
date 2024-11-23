@@ -38,7 +38,7 @@ function Login() {
             const data = await response.json();
             localStorage.setItem("accessToken", data.access_token);
             alert("Login successful!");
-            navigate("/");
+            navigate("/portfolio");
         } catch (err) {
             setError(err.message || "An unexpected error occurred.");
         }

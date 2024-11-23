@@ -29,6 +29,7 @@ def buy_stock(*, user: User = Depends(get_current_user),
         raise HTTPException(status_code=404, detail="Stock symbol not found.")
     
     stock_price = stock_data['price']
+    stock_name = stock_data['name']
     total_cost = stock_price * transaction.quantity
 
     if user.balance < total_cost:
@@ -49,6 +50,7 @@ def buy_stock(*, user: User = Depends(get_current_user),
         # Add a new portfolio entry
         new_portfolio_entry = Portfolio(
             user_id=user.id,
+            name = stock_name,
             stock=transaction.stock.upper(),
             quantity=transaction.quantity,
             price=stock_price,
@@ -71,16 +73,23 @@ def buy_stock(*, user: User = Depends(get_current_user),
     session.commit()
     session.refresh(user)
     session.refresh(new_transaction)
+    session.refresh(portfolio_entry)
 
     return {
         "message": "Stock purchased successfully.",
         "balance": user.balance,
         "portfolio": {
+            "name": stock_name,
             "stock": portfolio_entry.stock,
             "quantity": portfolio_entry.quantity,
             "price": portfolio_entry.price,
             
         },
+        "transaction" : {
+            "stock" : transaction.stock.upper(),
+            "price" : stock_price,
+            "quantity" : transaction.quantity
+        }
     }
 
 @router.post("/sell")
