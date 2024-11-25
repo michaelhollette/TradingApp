@@ -6,7 +6,11 @@ import Login from "./components/Auth/Login";
 import Portfolio from "./components/Portfolio/Portfolio";
 import GetQuote from "./components/Portfolio/Quote"
 import BuyStock from "./components/Transactions/Buy";
-import SellStock from "./components/Transactions/Sell"
+import SellStock from "./components/Transactions/Sell";
+import TransactionHistory from "./components/Transactions/History";
+import DepositFunds from "./components/User/Deposit";
+
+
 
 
 
@@ -39,6 +43,9 @@ function App() {
             <Route path="/quote" element={<GetQuote />} /> 
             <Route path="/buy" element={<BuyStock />} /> 
             <Route path ="/sell" element={<SellStock />} />
+            <Route path="/history" element={<TransactionHistory />} />
+            <Route path="/deposit" element={<DepositFunds />} /> 
+
 
         </Routes>
   </Router>

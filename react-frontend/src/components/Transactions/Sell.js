@@ -74,11 +74,18 @@ function SellStock() {
                 {result && (
                     <div className="result">
                         <h2>Stock Sold Successfully!</h2>
+                        <p><strong>Stock:</strong> {result.transaction.stock}</p>
+                        <p><strong>Price per share:</strong> ${result.transaction.price.toFixed(2)}</p>
+                        <p><strong>Quantity:</strong> {result.transaction.quantity}</p>
+                        <br></br>
+                        <h3>Updated Portfolio</h3>
                         <p><strong>Stock:</strong> {result.portfolio?.stock || "N/A"}</p>
+                        <p><strong>Company:</strong> {result.portfolio?.name || "N/A"}</p>
                         <p><strong>Quantity:</strong> {result.portfolio?.quantity || 0}</p>
                         {result.portfolio && (
                             <p><strong>Average Price:</strong> ${result.portfolio.price.toFixed(2)}</p>
                         )}
+                        <br></br>
                         <h3>Updated Balance</h3>
                         <p>${result.balance.toFixed(2)}</p>
                     </div>

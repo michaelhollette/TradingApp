@@ -46,6 +46,7 @@ def buy_stock(*, user: User = Depends(get_current_user),
         # Update existing portfolio entry
         portfolio_entry.quantity += transaction.quantity
         portfolio_entry.price = ((portfolio_entry.price * portfolio_entry.quantity)+ total_cost) / (portfolio_entry.quantity + transaction.quantity)  # Update average price
+
     else:
         # Add a new portfolio entry
         new_portfolio_entry = Portfolio(
@@ -57,6 +58,11 @@ def buy_stock(*, user: User = Depends(get_current_user),
         )
         session.add(new_portfolio_entry)
 
+        query = select(Portfolio).where(
+        Portfolio.user_id == user.id, Portfolio.stock == transaction.stock.upper()
+        )
+        portfolio_entry = session.exec(query).first()
+
     new_transaction = Transaction(
         user_id = user.id,
         stock = transaction.stock.upper(),
@@ -67,6 +73,8 @@ def buy_stock(*, user: User = Depends(get_current_user),
     )
 
     session.add(new_transaction)
+
+    
     
 
     # Commit the changes
@@ -74,6 +82,9 @@ def buy_stock(*, user: User = Depends(get_current_user),
     session.refresh(user)
     session.refresh(new_transaction)
     session.refresh(portfolio_entry)
+
+
+    
 
     return {
         "message": "Stock purchased successfully.",
@@ -105,6 +116,8 @@ def sell_stock(*, user : User = Depends(get_current_user),
         raise HTTPException(status_code=404, detail="Stock symbol not found.")
     
     stock_price = stock_data['price']
+    stock_name = stock_data['name']
+
     total_revenue = stock_price * transaction.quantity
     
     #Check whether user has bough enough stocks
@@ -148,11 +161,17 @@ def sell_stock(*, user : User = Depends(get_current_user),
         "message": "Stock sold successfully.",
         "balance": user.balance,
         "portfolio": None if portfolio_entry.quantity  == 0 else {
+            "name": stock_name,
             "stock": portfolio_entry.stock,
             "quantity": portfolio_entry.quantity,
             "price": portfolio_entry.price,
             
         },
+        "transaction" : {
+            "stock" : transaction.stock.upper(),
+            "price" : stock_price,
+            "quantity" : transaction.quantity
+        }
         
     }
 

@@ -18,6 +18,7 @@ class Transaction(TransactionInput, table=True):
 
 class TransactionOutput(TransactionInput):
     id: int
+    price: float
     timestamp: str
     type: str   
 
