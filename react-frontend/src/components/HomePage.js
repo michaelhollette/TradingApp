@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import '../styles.css';
 import logo from './images/logo.png'; // Update with your actual logo file name
 import globe from './images/globe.png'; // Update with your actual globe file name
+import "./styles/Home.css"
 
 function Homepage({ welcome }) {
     return (
