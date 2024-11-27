@@ -6,7 +6,7 @@ import Highcharts3D from "highcharts/highcharts-3d";
 import "../styles/Portfolio.css";
 
 
-// Apply the 3D module to Highcharts
+// Makes the charts 3d
 Highcharts3D(Highcharts);
 
 
@@ -17,7 +17,7 @@ function Portfolio() {
 
     async function fetchUserData() {
         try {
-            // Fetch user data
+            // Fetches user data
             const userResponse = await fetch("http://localhost:8000/api/auth/me", {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -31,7 +31,7 @@ function Portfolio() {
             const userData = await userResponse.json();
             setBalance(userData.balance);
 
-            // Fetch portfolio data
+            // Fetches portfolio data
             const portfolioResponse = await fetch("http://localhost:8000/api/portfolio/", {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -62,12 +62,14 @@ function Portfolio() {
                 alpha: 45,
                 beta: 0,
             },
+            width: 900, // Set the desired width
+            height:400, // Set the desired height
         },
         title: {
-            text: "Portfolio Distribution",
+            text: "Portfolio Allocation",
             style: {
                 color: "#f5f5f5",
-                fontSize: "18px",
+                fontSize: "24px",
             },
         },
         tooltip: {
@@ -116,6 +118,7 @@ function Portfolio() {
     };
     
     
+    
     useEffect(() => {
         fetchUserData();
     }, []);
@@ -161,8 +164,12 @@ function Portfolio() {
 
                 {/* Add the 3D Pie Chart below the table */}
                 <div className="chart-container">
-                    <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+                    <HighchartsReact
+                        highcharts={Highcharts}
+                        options={chartOptions}
+                    />
                 </div>
+
             </div>
         </>
     );

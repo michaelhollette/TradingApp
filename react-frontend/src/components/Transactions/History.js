@@ -71,7 +71,6 @@ function TransactionHistory(){
                         <table className="transaction-table">
                         <thead>
                             <tr>
-                                <th onClick={() => sortData("id")}>ID</th>
                                 <th onClick={() => sortData("stock")}>Stock</th>
                                 <th onClick={() => sortData("type")}>Type</th>
                                 <th onClick={() => sortData("quantity")}>Quantity</th>
@@ -93,7 +92,6 @@ function TransactionHistory(){
 
                                     return (
                                         <tr key={transaction.id}>
-                                            <td>{transaction.id}</td>
                                             <td>{transaction.stock}</td>
                                             <td>{transaction.type}</td>
                                             <td>{transaction.quantity}</td>

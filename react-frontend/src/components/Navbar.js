@@ -36,7 +36,7 @@ function Navbar() {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("userBalance");
         alert("Logged out successfully!");
-        navigate("/login"); // Redirect to login page
+        navigate("/"); 
     };
 
 
@@ -45,6 +45,7 @@ function Navbar() {
             <div className="navbar-links">
                 <Link to="/portfolio">Portfolio</Link>
                 <Link to="/quote">Get Quote</Link>
+                <Link to="/watchlist">Watchlist</Link>
                 <Link to="/buy">Buy Stock</Link>
                 <Link to="/sell">Sell Stock</Link>
                 <Link to="/history">Transaction History</Link>

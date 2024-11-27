@@ -9,6 +9,7 @@ import BuyStock from "./components/Transactions/Buy";
 import SellStock from "./components/Transactions/Sell";
 import TransactionHistory from "./components/Transactions/History";
 import DepositFunds from "./components/User/Deposit";
+import Watchlist from './components/Watchlist/Watchlist';
 
 
 
@@ -45,6 +46,7 @@ function App() {
             <Route path ="/sell" element={<SellStock />} />
             <Route path="/history" element={<TransactionHistory />} />
             <Route path="/deposit" element={<DepositFunds />} /> 
+            <Route path ="/watchlist" element= {<Watchlist/>}/>
 
 
         </Routes>

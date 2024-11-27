@@ -19,17 +19,17 @@
 
 /* Navbar Links Section */
 .navbar-links {
-    position: absolute; /* Absolute positioning to center links */
-    left: 50%; /* Move to the middle horizontally */
-    transform: translateX(-50%); /* Adjust for width to perfectly center */
+    position: absolute;
+    left: 50%; 
+    transform: translateX(-50%); 
     display: flex;
-    gap: 25px; /* Increased spacing between links */
+    gap: 25px; 
 }
 
 .navbar-links a {
     text-decoration: none;
     color: #00acee;
-    font-size: 1.1rem; /* Slightly larger font for better readability */
+    font-size: 1.1rem; 
     font-weight: bold;
     transition: color 0.3s ease;
 }

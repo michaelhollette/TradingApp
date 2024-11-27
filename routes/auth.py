@@ -61,9 +61,9 @@ async def register(request: RegisterRequest, session: Session = Depends(get_sess
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Username already taken"
         )
-    # Create a new user
+    
     new_user = User(username=username)
-    new_user.set_password(password)  # Hash the password
+    new_user.set_password(password)  
     session.add(new_user)
     session.commit()
     session.refresh(new_user)
