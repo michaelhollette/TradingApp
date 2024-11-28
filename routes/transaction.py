@@ -28,9 +28,9 @@ def buy_stock(*, user: User = Depends(get_current_user),
     if stock_data is None:
         raise HTTPException(status_code=404, detail="Stock symbol not found.")
     
-    stock_price = stock_data['price']
+    stock_price = round(float(stock_data['price']),2)
     stock_name = stock_data['name']
-    total_cost = stock_price * transaction.quantity
+    total_cost = round(stock_price * transaction.quantity,2)
 
     if user.balance < total_cost:
         raise HTTPException(status_code= 400, detail = "Insufficient funds" )

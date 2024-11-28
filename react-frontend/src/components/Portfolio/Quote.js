@@ -13,12 +13,16 @@ function GetQuote() {
     const [quote, setQuote] = useState(null);
     const [error, setError] = useState(null);
     const [history, setHistory] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
+
 
     async function fetchQuote() {
         try {
             setError(null);
             setQuote(null);
             setHistory(null);
+            setSuccessMessage(null);
+
 
             if (!symbol) {
                 setError("Please enter a stock symbol.");
@@ -53,6 +57,37 @@ function GetQuote() {
         }
     }
 
+    async function addToWatchlist(){
+        try{
+            setError(null);
+            setSuccessMessage(null);
+
+            if(!quote){
+                setError("No stock to add to  watchlist");
+                return;
+            }
+
+            const response = await fetch("http://localhost:8000/api/watchlist",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+                body: JSON.stringify({ stock: quote.symbol, name: quote.name }),
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.detail || "Failed to add stock to watchlist.");
+            }
+
+            setSuccessMessage(`Successfully added ${quote.name} (${quote.symbol}) to your watchlist.`);
+        } catch (err) {
+            setError(err.message || "An unexpected error occurred.");
+        }
+        
+    }
+
     const chartData = {
         labels: history ? history.map((data) => data.date).reverse() : [],
         datasets: [
@@ -80,6 +115,7 @@ function GetQuote() {
                     <button onClick={fetchQuote}>Get Quote</button>
                 </div>
                 {error && <p className="error">{error}</p>}
+                {successMessage && <p className="success">{successMessage}</p>}
                 {quote && (
                     <div className="quote-details">
                         {quote.logo && (
@@ -95,6 +131,9 @@ function GetQuote() {
                         <p><strong>Sector:</strong> {quote.sector}</p>
                         <p><strong>Industry:</strong> {quote.industry}</p>
                         <p><strong>Description:</strong> {quote.description}</p>
+                        <button className="watchlist-button" onClick={addToWatchlist}>
+                            Add to Watchlist
+                        </button>
                     </div>
                 )}
                 {history && (
@@ -106,6 +145,6 @@ function GetQuote() {
             </div>
         </>
     );
-}
 
+}
 export default GetQuote;

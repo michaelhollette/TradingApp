@@ -83,6 +83,7 @@ function Watchlist(){
                                 <h2>{item.name} ({item.stock})</h2>
                                 <p>Current Price: ${item.current_price}</p> 
                             </div>
+                            <h3 className="watchlist-graph-title">{item.stock} Movements Over Past 24 Hours   </h3>
                             <button className = "delete-button" onClick={() => deleteItem(item.id)}>Remove</button>
                         </div>
                         {item.historical_price ? (

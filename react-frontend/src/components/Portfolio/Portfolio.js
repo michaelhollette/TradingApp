@@ -62,7 +62,7 @@ function Portfolio() {
                 alpha: 45,
                 beta: 0,
             },
-            width: 900, // Set the desired width
+            width: 1200, // Set the desired width
             height:400, // Set the desired height
         },
         title: {

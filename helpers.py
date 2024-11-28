@@ -65,7 +65,7 @@ def lookup_watchlist(symbol):
                 "date": date,
                 "price": float(values["4. close"])
             }
-            for date, values in list(time_series.items())[:48]
+            for date, values in list(time_series.items())[:33]
         ]
         print(historical_data)
 
