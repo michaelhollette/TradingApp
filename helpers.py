@@ -81,8 +81,8 @@ def lookup2(symbol):
     api_key = "FGkzWV4lrs1pDemA6kxNLzE7PdY4elEq"
     api_key2 ="tXI3IbsvZVPvZhdlB7iyGUbf4YYQJKiZ"
     # URLs for the stock price and company overview
-    price_url = f"https://financialmodelingprep.com/api/v3/quote/{symbol}?apikey={api_key}"
-    overview_url = f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={api_key}"
+    price_url = f"https://financialmodelingprep.com/api/v3/quote/{symbol}?apikey={api_key2}"
+    overview_url = f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={api_key2}"
     
 
     try:
@@ -139,7 +139,7 @@ def lookup_intraday(symbol):
     print("Previous_date", previous_date_str)
     print("Current Date: ", current_date_str)
 
-    url = f"https://financialmodelingprep.com/api/v3/historical-chart/30min/{symbol}?from={previous_date_str}&to={current_date_str}&extended=true&apikey={api_key}"
+    url = f"https://financialmodelingprep.com/api/v3/historical-chart/30min/{symbol}?from={previous_date_str}&to={current_date_str}&extended=true&apikey={api_key2}"
     print("URL: ",url)
 
 
@@ -164,7 +164,7 @@ def lookup_daily_history(symbol):
     api_key = "FGkzWV4lrs1pDemA6kxNLzE7PdY4elEq"
     api_key2 ="tXI3IbsvZVPvZhdlB7iyGUbf4YYQJKiZ"
 
-    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?apikey={api_key}"
+    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?apikey={api_key2}"
 
     try:
         response = requests.get(url)

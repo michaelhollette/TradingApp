@@ -14,6 +14,10 @@ function Portfolio() {
     const [portfolio, setPortfolio] = useState([]);
     const [balance, setBalance] = useState(0);
     const [error, setError] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const handleShowModal = () => setShowModal(true);
+    const handleCloseModal = () => setShowModal(false);
+
 
     async function fetchUserData() {
         try {
@@ -43,7 +47,22 @@ function Portfolio() {
             }
 
             const portfolioData = await portfolioResponse.json();
-            setPortfolio(portfolioData);
+            // Fetch current prices for all stocks in the portfolio
+
+            const symbols = portfolioData.map((stock) => stock.stock).join(",");
+            const pricesResponse = await fetch(`https://financialmodelingprep.com/api/v3/quote/${symbols}?apikey=tXI3IbsvZVPvZhdlB7iyGUbf4YYQJKiZ`);
+            if (!pricesResponse.ok) {
+                throw new Error("Failed to fetch current stock prices");
+            }
+
+            const pricesData = await pricesResponse.json();
+            const updatedPortfolio = portfolioData.map((stock) => {
+                const currentPrice = pricesData.find((price) => price.symbol === stock.stock)?.price || stock.price;
+                const unrealizedGainLoss = ((currentPrice - stock.price) * stock.quantity).toFixed(2);
+                return { ...stock, current_price: currentPrice, unrealized_gain_loss: unrealizedGainLoss };
+            });
+
+            setPortfolio(updatedPortfolio)
         } catch (err) {
             setError(err.message);
         }
@@ -137,6 +156,8 @@ function Portfolio() {
                             <th>Quantity</th>
                             <th>Average Price</th>
                             <th>Total Price</th>
+                            <th>Current Price</th>
+                            <th>Unrealized Gain/Loss</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -147,28 +168,96 @@ function Portfolio() {
                                 <td>{stock.quantity}</td>
                                 <td>${stock.price.toFixed(2)}</td>
                                 <td>${(stock.quantity * stock.price).toFixed(2)}</td>
+                                <td>${stock.current_price.toFixed(2)}</td>
+                                <td
+                                    style={{
+                                        color: stock.unrealized_gain_loss > 0 ? "green" : "red",
+                                    }}
+                                >
+                                    ${stock.unrealized_gain_loss}
+                                </td>
+                                
                             </tr>
                         ))}
                     </tbody>
                     <tfoot>
-                        <tr>
-                            <td colSpan="4">Total Stock Value</td>
-                            <td>${calculateTotalValue()}</td>
-                        </tr>
-                        <tr>
-                            <td colSpan="4">Balance</td>
-                            <td>${parseFloat(balance).toFixed(2)}</td>
-                        </tr>
-                    </tfoot>
+                    <tr>
+                        <td colSpan="4">Total Stock Value</td>
+                        <td>${calculateTotalValue()}</td>
+                        <td colSpan="2"></td>
+                    </tr>
+                    <tr>
+                        <td colSpan="6">Total Unrealized Gain/Loss</td>
+                        <td
+                            style={{
+                                color:
+                                    portfolio.reduce(
+                                        (total, stock) =>
+                                            total + parseFloat(stock.unrealized_gain_loss || 0),
+                                        0
+                                    ) > 0
+                                        ? "green"
+                                        : "red",
+                            }}
+                        >
+                            $
+                            {portfolio
+                                .reduce(
+                                    (total, stock) =>
+                                        total + parseFloat(stock.unrealized_gain_loss || 0),
+                                    0
+                                )
+                                .toFixed(2)}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan="6">Balance</td>
+                        <td>${parseFloat(balance).toFixed(2)}</td>
+                    </tr>
+                </tfoot>
+
                 </table>
 
-                {/* Add the 3D Pie Chart below the table */}
+                
+
+                {showModal && (
+                    <div className="modal">
+                        <div className="modal-content">
+                            <button onClick={handleCloseModal} className="close-modal-button">
+                                Close
+                            </button>
+                            <HighchartsReact
+                                highcharts={Highcharts}
+                                options={{
+                                    chart: { type: "column", backgroundColor: "#121212" },
+                                    title: { text: "Unrealized Gains/Losses", style: { color: "#f5f5f5" } },
+                                    xAxis: { categories: portfolio.map((stock) => stock.stock), labels: { style: { color: "#f5f5f5" } } },
+                                    yAxis: { title: { text: "Profit/Loss ($)", style: { color: "#f5f5f5" } } },
+                                    series: [
+                                        {
+                                            name: "Profit/Loss",
+                                            data: portfolio.map((stock) => parseFloat(stock.unrealized_gain_loss || 0)),
+                                            color: "#00acee",
+                                        },
+                                    ],
+                                    
+                                }}
+                            />
+                        </div>
+                    </div>
+                )}
+
+
                 <div className="chart-container">
                     <HighchartsReact
                         highcharts={Highcharts}
                         options={chartOptions}
                     />
                 </div>
+
+                <button onClick={handleShowModal} className="show-insight-button">
+                    Show Profit Insights
+                </button>
 
             </div>
         </>

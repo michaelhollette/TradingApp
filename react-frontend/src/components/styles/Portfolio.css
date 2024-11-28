@@ -86,3 +86,57 @@ body {
     min-height: 150vh; /* Extend content height to 150% of the viewport */
     background-color: #121212;
 }
+
+/* Modal Styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 800px;
+    text-align: center;
+}
+
+.close-modal-button {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.close-modal-button:hover {
+    background: #cc0000;
+}
+
+.show-insight-button {
+    background: #00acee;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.show-insight-button:hover {
+    background: #007bb5;
+}
