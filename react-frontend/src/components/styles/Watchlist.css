@@ -45,9 +45,15 @@ h1 {
 
 
 .watchlist-details {
-    display: flex;
-    flex-direction: column; /* Stack h2 and p vertically */
-    gap: 5px; /* Add spacing between h2 and p */
+    display: flex; /* Keep elements aligned naturally */
+    flex-direction: column; /* Stack elements vertically */
+    text-align: left; /* Ensure text aligns to the left */
+}
+
+.company-logo {
+    width: 50px; /* Make the image small */
+    height: 50px; /* Maintain aspect ratio */
+    object-fit: contain; /* Ensure the image scales properly */
 }
 
 .watchlist-header {

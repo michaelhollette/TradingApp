@@ -45,11 +45,13 @@ class PortfolioOutput(SQLModel):
 
 class WatchlistInput(SQLModel):
     stock: str
+    name: str
+    image_url: str
+    
     
 
 class Watchlist(WatchlistInput, table = True):
     id: int | None = Field(default=None, primary_key=True)
-    name: str
     user_id: int = Field(foreign_key="user.id")
     user: "User" = Relationship(back_populates="watchlist")
 

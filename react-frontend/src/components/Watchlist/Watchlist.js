@@ -54,7 +54,7 @@ function Watchlist(){
     function renderChart(historicalData) {
         const sortedData = [...historicalData].reverse()
         const labels = sortedData.map((entry) => new Date(entry.date).toLocaleTimeString());
-        const prices = sortedData.map((entry) => entry.price);
+        const prices = sortedData.map((entry) => entry.close);
 
         return {
             labels,
@@ -80,9 +80,13 @@ function Watchlist(){
                     <div key={item.id} className="watchlist-item">
                         <div className="watchlist-header">
                             <div className="watchlist-details">
+                            <img src={item.image} alt={`${item.image} Logo`} className="company-logo"/>
+                                {console.log("Logo:", item)}
                                 <h2>{item.name} ({item.stock})</h2>
                                 <p>Current Price: ${item.current_price}</p> 
+
                             </div>
+                            
                             <h3 className="watchlist-graph-title">{item.stock} Movements Over Past 24 Hours   </h3>
                             <button className = "delete-button" onClick={() => deleteItem(item.id)}>Remove</button>
                         </div>

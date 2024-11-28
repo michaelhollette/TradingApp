@@ -9,11 +9,12 @@ from schemas import User, UserOutput
 URL_PREFIX = "/auth"
 router = APIRouter(prefix=URL_PREFIX, tags=["Authentication"])
 
-#OAuth serves many use cases, client that is trying to get access, could be served from another domain
+# OAuth serves many use cases, client that is trying to get access, could be served from another domain
 # OAuth will send the user credential to the token url - which could be served from another server
-# If the credentials are ok, client will get a token from the url which will be used to asccess the operation
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token") # returns a token
+# If the credentials are ok, client will get a token from the url which will be used to ascess the operation
 
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token") # returns a token
 
 def get_current_user(token: str = Depends(oauth2_scheme),
                      session: Session = Depends(get_session)) -> User:

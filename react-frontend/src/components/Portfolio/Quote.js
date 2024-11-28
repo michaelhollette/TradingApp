@@ -66,6 +66,7 @@ function GetQuote() {
                 setError("No stock to add to  watchlist");
                 return;
             }
+            console.log("Quote: ", quote)
 
             const response = await fetch("http://localhost:8000/api/watchlist",{
                 method: "POST",
@@ -73,7 +74,8 @@ function GetQuote() {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
-                body: JSON.stringify({ stock: quote.symbol, name: quote.name }),
+                
+                body: JSON.stringify({ stock: quote.symbol, name: quote.name, image_url: quote.logo }),
             });
 
             if (!response.ok) {
@@ -89,11 +91,16 @@ function GetQuote() {
     }
 
     const chartData = {
-        labels: history ? history.map((data) => data.date).reverse() : [],
+        labels: history 
+            ? history.map((data) => {
+                const date = new Date(data.date); // Convert to Date object
+                return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`; // Format as MM/DD/YYYY
+            }).reverse() 
+            : [],
         datasets: [
             {
-                label: "Weekly Closing Price",
-                data: history ? history.map((data) => data.price).reverse() : [],
+                label: "Daily Closing Price",
+                data: history ? history.map((data) => data.close).reverse() : [],
                 borderColor: "rgba(75,192,192,1)",
                 fill: false,
             },
@@ -127,10 +134,14 @@ function GetQuote() {
                         )}
                         <h2>{quote.name} ({quote.symbol})</h2>
                         <p><strong>Price:</strong> ${quote.price.toFixed(2)}</p>
+                        <p><strong>Market Cap:</strong> ${Number(quote.market_cap).toLocaleString("en-US")}</p>
+
                         <p><strong>Exchange:</strong> {quote.exchange}</p>
                         <p><strong>Sector:</strong> {quote.sector}</p>
                         <p><strong>Industry:</strong> {quote.industry}</p>
                         <p><strong>Description:</strong> {quote.description}</p>
+                        <p><strong>Address:</strong> {quote.address}</p>
+
                         <button className="watchlist-button" onClick={addToWatchlist}>
                             Add to Watchlist
                         </button>
@@ -138,7 +149,7 @@ function GetQuote() {
                 )}
                 {history && (
                     <div className="chart-container">
-                        <h2>Historical Weekly Prices (Last 52 Weeks)</h2>
+                        <h2>Historical Daily Prices (Last 30 Day)</h2>
                         <Line data={chartData} />
                     </div>
                 )}

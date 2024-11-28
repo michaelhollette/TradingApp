@@ -4,7 +4,7 @@ from starlette import status
 from routes.auth import get_current_user
 from db import get_session
 from schemas import User, UserOutput, Portfolio,  PortfolioOutput, Transaction, TransactionInput, TransactionOutput
-from helpers import lookup 
+from helpers import lookup2
 from datetime import datetime
 
 
@@ -24,7 +24,7 @@ def buy_stock(*, user: User = Depends(get_current_user),
     if transaction.quantity <= 0:
         raise HTTPException(status_code=400, detail="Quantity must be greater than 0.")
 
-    stock_data=lookup(transaction.stock) 
+    stock_data=lookup2(transaction.stock) 
     if stock_data is None:
         raise HTTPException(status_code=404, detail="Stock symbol not found.")
     
@@ -111,7 +111,7 @@ def sell_stock(*, user : User = Depends(get_current_user),
     if transaction.quantity <= 0:
         raise HTTPException(status_code=400, detail="Quantity must be greater than 0.")
     
-    stock_data=lookup(transaction.stock) 
+    stock_data=lookup2(transaction.stock) 
     if stock_data is None:
         raise HTTPException(status_code=404, detail="Stock symbol not found.")
     

@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, APIRouter
 from sqlmodel import Session, select
-from helpers import lookup, lookup_watchlist
+from helpers import lookup2, lookup_intraday
 from db import get_session
 from routes.auth import get_current_user
 from schemas import User, UserOutput, Portfolio,  PortfolioOutput, Transaction, TransactionInput, TransactionOutput, Watchlist, WatchlistInput
@@ -18,14 +18,16 @@ def get_watchlist(user: User = Depends(get_current_user),
 
     for item in watchlist_items:
         print(item.stock)
-        stock_data = lookup_watchlist(item.stock)
+        stock_data = lookup_intraday(item.stock)
+        stock_price = lookup2(item.stock)
         if stock_data:
             watchlist_data.append({
                 "id": item.id,
                 "stock": item.stock,
                 "name": item.name,
-                "current_price": stock_data['price'],
-                "historical_price": stock_data['history']
+                "current_price": stock_price['price'],
+                "historical_price": stock_data['history'],
+                "image": item.image_url
             })
         else:
             watchlist_data.append({
@@ -40,15 +42,14 @@ def get_watchlist(user: User = Depends(get_current_user),
 
 
 @router.post("/", response_model = Watchlist)
-def add_to_watchlist(watchlist_code: WatchlistInput,
+def add_to_watchlist(watchlist: WatchlistInput,
                      user: User = Depends(get_current_user),
                      session: Session = Depends(get_session)) -> Watchlist:
-    stock_data = lookup(watchlist_code.stock)
-    if stock_data is None:
-        raise HTTPException(status_code=404, detail="Stock symbol not found or invalid.")
+   
     new_item = Watchlist(
-        stock = watchlist_code.stock.upper(),
-        name = stock_data['name'],
+        stock = watchlist.stock.upper(),
+        name = watchlist.name,
+        image_url=watchlist.image_url,
         user_id = user.id
     )
 
