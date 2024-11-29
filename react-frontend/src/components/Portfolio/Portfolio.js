@@ -6,7 +6,7 @@ import Highcharts3D from "highcharts/highcharts-3d";
 import "../styles/Portfolio.css";
 
 
-// Makes the charts 3d
+// Makes charts 3d
 Highcharts3D(Highcharts);
 
 
@@ -46,9 +46,8 @@ function Portfolio() {
                 throw new Error("Failed to fetch portfolio data");
             }
 
+            // Fetches current prices 
             const portfolioData = await portfolioResponse.json();
-            // Fetch current prices for all stocks in the portfolio
-
             const symbols = portfolioData.map((stock) => stock.stock).join(",");
             const pricesResponse = await fetch(`https://financialmodelingprep.com/api/v3/quote/${symbols}?apikey=tXI3IbsvZVPvZhdlB7iyGUbf4YYQJKiZ`);
             if (!pricesResponse.ok) {
@@ -62,16 +61,19 @@ function Portfolio() {
                 return { ...stock, current_price: currentPrice, unrealized_gain_loss: unrealizedGainLoss };
             });
 
+            // Loads portfolio data
             setPortfolio(updatedPortfolio)
         } catch (err) {
             setError(err.message);
         }
     }
 
+    // For each element in array it does {Current accumulated total} += {Quantity * price}
     const calculateTotalValue = () => {
         return portfolio.reduce((total, stock) => total + stock.quantity * stock.price, 0).toFixed(2);
     };
 
+    // Chart settings
     const chartOptions = {
         chart: {
             type: "pie",
@@ -81,8 +83,8 @@ function Portfolio() {
                 alpha: 45,
                 beta: 0,
             },
-            width: 1200, // Set the desired width
-            height:400, // Set the desired height
+            width: 1200, 
+            height:400,
         },
         title: {
             text: "Portfolio Allocation",
@@ -103,7 +105,7 @@ function Portfolio() {
                 depth: 35,
                 dataLabels: {
                     enabled: true,
-                    format: "{point.name}: {point.percentage:.1f}%", // Show percentage
+                    format: "{point.name}: {point.percentage:.1f}%", 
                     style: {
                         color: "#f5f5f5",
                         fontSize: "14px",
@@ -119,11 +121,11 @@ function Portfolio() {
                     y: stock.quantity * stock.price,
                 })),
                 colors: [
-                    "#00acee", // Primary color
-                    "#00429B", // Blue
+                    "#00acee", // Light blue
+                    "#00429B", // Navy
                     "#FF6384", // Red
                     "#FFCE56", // Yellow
-                    "#4BC0C0", // Teal
+                    "#4BC0C0", // Turquoise
                     "#9966FF", // Purple
                 ],
             },
@@ -255,6 +257,7 @@ function Portfolio() {
                     />
                 </div>
 
+                
                 <button onClick={handleShowModal} className="show-insight-button">
                     Show Profit Insights
                 </button>

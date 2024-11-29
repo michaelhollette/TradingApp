@@ -22,8 +22,10 @@ function Login() {
             const response = await fetch("http://localhost:8000/api/auth/token", {
                 method: "POST",
                 headers: {
+                    // Encodes the data in form data for OAuth2.0 rather than sending it in JSON
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
+                // URLSearchParams is a built in Javascript 
                 body: new URLSearchParams({
                     username: username,
                     password: password,

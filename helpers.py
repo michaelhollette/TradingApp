@@ -1,6 +1,8 @@
 import requests
 from fastapi import Depends, HTTPException, APIRouter
 from datetime import date, timedelta
+import httpx
+
 
 
 def lookup(symbol):
@@ -80,9 +82,11 @@ def lookup_watchlist(symbol):
 def lookup2(symbol):
     api_key = "FGkzWV4lrs1pDemA6kxNLzE7PdY4elEq"
     api_key2 ="tXI3IbsvZVPvZhdlB7iyGUbf4YYQJKiZ"
+    api_key3="GhhSe5dXT7x8Sxf71TuPFccL8Ofx0c0b"
+
     # URLs for the stock price and company overview
-    price_url = f"https://financialmodelingprep.com/api/v3/quote/{symbol}?apikey={api_key2}"
-    overview_url = f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={api_key2}"
+    price_url = f"https://financialmodelingprep.com/api/v3/quote/{symbol}?apikey={api_key3}"
+    overview_url = f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={api_key3}"
     
 
     try:
@@ -124,47 +128,45 @@ def lookup2(symbol):
         return None
 
 
-def lookup_intraday(symbol):
+
+async def lookup_intraday(symbol):
     current_date = date.today()
+    current_date = current_date - timedelta(days=1)
+
     previous_date = current_date - timedelta(days=1)
+
     current_date_str = current_date.strftime("%Y-%m-%d")
     previous_date_str = previous_date.strftime("%Y-%m-%d")
 
-    
-
-
     api_key = "FGkzWV4lrs1pDemA6kxNLzE7PdY4elEq"
-    api_key2 ="tXI3IbsvZVPvZhdlB7iyGUbf4YYQJKiZ"
-
-    print("Previous_date", previous_date_str)
-    print("Current Date: ", current_date_str)
-
-    url = f"https://financialmodelingprep.com/api/v3/historical-chart/30min/{symbol}?from={previous_date_str}&to={current_date_str}&extended=true&apikey={api_key2}"
-    print("URL: ",url)
-
+    api_key2 = "tXI3IbsvZVPvZhdlB7iyGUbf4YYQJKiZ"
+    api_key3="GhhSe5dXT7x8Sxf71TuPFccL8Ofx0c0b"
+    url = f"https://financialmodelingprep.com/api/v3/historical-chart/30min/{symbol}?from={previous_date_str}&to={current_date_str}&extended=true&apikey={api_key3}"
+    print(url)
 
     try:
-        response = requests.get(url)
-        response.raise_for_status()
-        data = response.json()
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url)
+            response.raise_for_status()
+            data = response.json()
 
-        
+            historical_prices = [
+                {"date": entry["date"], "close": entry["close"]}
+                for entry in data[:30]
+            ]
 
-        historical_prices =  [
-                            {"date": entry["date"], "close": entry["close"]}
-                            for entry in data[:30]
-                        ]
-        
-        return {"symbol": symbol.upper(), "history": historical_prices}
-    except (requests.RequestException, KeyError, ValueError):
+            return {"symbol": symbol.upper(), "history": historical_prices}
+    except (httpx.RequestError, KeyError, ValueError):
         return None
 
 
 def lookup_daily_history(symbol):
     api_key = "FGkzWV4lrs1pDemA6kxNLzE7PdY4elEq"
     api_key2 ="tXI3IbsvZVPvZhdlB7iyGUbf4YYQJKiZ"
+    api_key3="GhhSe5dXT7x8Sxf71TuPFccL8Ofx0c0b"
 
-    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?apikey={api_key2}"
+
+    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?apikey={api_key3}"
 
     try:
         response = requests.get(url)
@@ -174,10 +176,8 @@ def lookup_daily_history(symbol):
         if "symbol" not in data:
             raise HTTPException(status_code=404, detail="Stock symbol not found or invalid.")
         
-        print(data)
 
         time_series = data["historical"][0]
-        print(time_series)
         # Extract the last 30 days
         historical_data = [
                             {"date": entry["date"], "close": entry["close"]}

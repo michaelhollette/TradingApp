@@ -5,40 +5,53 @@ from db import get_session
 from routes.auth import get_current_user
 from schemas import User, UserOutput, Portfolio,  PortfolioOutput, Transaction, TransactionInput, TransactionOutput, Watchlist, WatchlistInput
 import requests
-
+import asyncio
+import httpx
 
 router = APIRouter(prefix = "/watchlist", tags = ["Watchlist"])
 
 @router.get("/")
-def get_watchlist(user: User = Depends(get_current_user),
-                  session: Session=Depends(get_session)) -> list:
-    query = select(Watchlist).where(Watchlist.user_id==user.id)
+async def get_watchlist(user: User = Depends(get_current_user),
+                        session: Session = Depends(get_session)) -> list:
+    query = select(Watchlist).where(Watchlist.user_id == user.id)
     watchlist_items = session.exec(query).all()
-    watchlist_data =[]
 
-    for item in watchlist_items:
-        print(item.stock)
-        stock_data = lookup_intraday(item.stock)
-        stock_price = lookup2(item.stock)
-        if stock_data:
-            watchlist_data.append({
-                "id": item.id,
-                "stock": item.stock,
-                "name": item.name,
-                "current_price": stock_price['price'],
-                "historical_price": stock_data['history'],
-                "image": item.image_url
-            })
-        else:
-            watchlist_data.append({
-                "id": item.id,
-                "stock": item.stock,
-                "name": item.name,
-                "current_price": None, 
-                "historical_price": None
-            })
-     
+    # Concatenates all symbols bulk API searchp
+    symbols = ",".join([item.stock for item in watchlist_items])
+
+    # Fetches current prices for watchlist items 
+    bulk_prices_url = f"https://financialmodelingprep.com/api/v3/quote/{symbols}?apikey=GhhSe5dXT7x8Sxf71TuPFccL8Ofx0c0b"
+    async with httpx.AsyncClient() as client:
+        bulk_prices_response = await client.get(bulk_prices_url)
+        bulk_prices_response.raise_for_status()
+        bulk_prices_data = bulk_prices_response.json()
+
+    # Maps  stock prices to symbols 
+    stock_price_map = {item["symbol"]: item for item in bulk_prices_data}
+
+    # Fetches historical data aynchronously
+    tasks = [
+        lookup_intraday(item.stock)
+        for item in watchlist_items
+    ]
+    historical_data = await asyncio.gather(*tasks)
+
+    # Combines results
+    watchlist_data = []
+    for item, stock_data in zip(watchlist_items, historical_data):
+        stock_info = stock_price_map.get(item.stock)
+        watchlist_data.append({
+            "id": item.id,
+            "stock": item.stock,
+            "name": item.name,
+            "current_price": stock_info["price"] if stock_info else None,
+            "historical_price": stock_data["history"] if stock_data else None,
+            "image": item.image_url,
+        })
+
     return watchlist_data
+
+
 
 
 @router.post("/", response_model = Watchlist)

@@ -14,21 +14,25 @@ function GetQuote() {
     const [error, setError] = useState(null);
     const [history, setHistory] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
+    const [showCompanies, setShowCompanies] = useState(false);
+    const [companies, setCompanies] = useState([]);
 
 
     async function fetchQuote() {
         try {
+            // Resets values and messages 
             setError(null);
             setQuote(null);
             setHistory(null);
             setSuccessMessage(null);
 
-
+            // Error handling
             if (!symbol) {
                 setError("Please enter a stock symbol.");
                 return;
             }
 
+            // Fetches price and company data
             const response = await fetch(`http://localhost:8000/api/portfolio/quote/${symbol}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -43,7 +47,7 @@ function GetQuote() {
             const data = await response.json();
             setQuote(data);
 
-            // Fetch historical data
+            // Fetches historical price data
             const historyResponse = await fetch(`http://localhost:8000/api/portfolio/quote/${symbol}/history`);
             if (!historyResponse.ok) {
                 const historyData = await historyResponse.json();
@@ -57,17 +61,21 @@ function GetQuote() {
         }
     }
 
+    // Function for add to watchlist button
     async function addToWatchlist(){
         try{
+            // Resets messages
             setError(null);
             setSuccessMessage(null);
 
+            // Error handling
             if(!quote){
                 setError("No stock to add to  watchlist");
                 return;
             }
             console.log("Quote: ", quote)
-
+            
+            // Fetches watchlist itemsand data
             const response = await fetch("http://localhost:8000/api/watchlist",{
                 method: "POST",
                 headers: {
@@ -90,11 +98,42 @@ function GetQuote() {
         
     }
 
+     // Fetch largest companies function
+     async function fetchCompanies() {
+        try {
+            setError(null);
+
+            const response = await fetch(
+                "https://financialmodelingprep.com/api/v3/stock-screener?exchange=NASDAQ&limit=100&order=marketCap&apikey=tXI3IbsvZVPvZhdlB7iyGUbf4YYQJKiZ"
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch NASDAQ companies.");
+            }
+
+            const data = await response.json();
+
+            const filteredData = data.filter(
+                (company) =>
+                    company.price !== null &&
+                    company.price !== undefined &&
+                    company.marketCap !== null &&
+                    company.marketCap !== undefined
+            );
+            setCompanies(filteredData);
+            setShowCompanies(true);
+        } catch (err) {
+            setError(err.message || "An unexpected error occurred.");
+        }
+    }
+
+    // Chart options
     const chartData = {
         labels: history 
             ? history.map((data) => {
-                const date = new Date(data.date); // Convert to Date object
-                return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`; // Format as MM/DD/YYYY
+                // Converts string to Date data type and formats
+                const date = new Date(data.date);
+                return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`; 
             }).reverse() 
             : [],
         datasets: [
@@ -151,6 +190,36 @@ function GetQuote() {
                     <div className="chart-container">
                         <h2>Historical Daily Prices (Last 30 Day)</h2>
                         <Line data={chartData} />
+                    </div>
+                )}
+                <button onClick={showCompanies ? () => setShowCompanies(false) : fetchCompanies}>
+                    {showCompanies ? "Hide Biggest NASDAQ Companies" : "Show Biggest NASDAQ Companies"}
+                </button>
+                {showCompanies && companies.length > 0 && (
+                    <div className="companies-table">
+                        <h2>Biggest 100 NASDAQ Companies</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Name</th>
+                                    <th>Symbol</th>
+                                    <th>Price</th>
+                                    <th>Market Cap</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {companies.map((company, index) => (
+                                    <tr key={company.symbol}>
+                                        <td>{index + 1}</td>
+                                        <td>{company.companyName}</td>
+                                        <td>{company.symbol}</td>
+                                        <td>${company.price.toFixed(2)}</td>
+                                        <td>${(company.marketCap / 1e9).toFixed(2)} B</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 )}
             </div>
