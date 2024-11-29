@@ -18,7 +18,7 @@ function GetQuote() {
     const [companies, setCompanies] = useState([]);
 
 
-    async function fetchQuote() {
+    async function fetchQuote(symbolInput = symbol) {
         try {
             // Resets values and messages 
             setError(null);
@@ -27,13 +27,13 @@ function GetQuote() {
             setSuccessMessage(null);
 
             // Error handling
-            if (!symbol) {
+            if (!symbolInput) {
                 setError("Please enter a stock symbol.");
                 return;
             }
 
             // Fetches price and company data
-            const response = await fetch(`http://localhost:8000/api/portfolio/quote/${symbol}`, {
+            const response = await fetch(`http://localhost:8000/api/portfolio/quote/${symbolInput}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
@@ -48,7 +48,7 @@ function GetQuote() {
             setQuote(data);
 
             // Fetches historical price data
-            const historyResponse = await fetch(`http://localhost:8000/api/portfolio/quote/${symbol}/history`);
+            const historyResponse = await fetch(`http://localhost:8000/api/portfolio/quote/${symbolInput}/history`);
             if (!historyResponse.ok) {
                 const historyData = await historyResponse.json();
                 throw new Error(historyData.detail || "Failed to fetch historical data.");
@@ -98,7 +98,7 @@ function GetQuote() {
         
     }
 
-     // Fetch largest companies function
+     // Fetchs biggest companies 
      async function fetchCompanies() {
         try {
             setError(null);
@@ -213,7 +213,16 @@ function GetQuote() {
                                     <tr key={company.symbol}>
                                         <td>{index + 1}</td>
                                         <td>{company.companyName}</td>
-                                        <td>{company.symbol}</td>
+                                        <td>
+                                            <button
+                                                className="symbol-link"
+                                                onClick={() => {
+                                                    setSymbol(company.symbol); 
+                                                    fetchQuote(company.symbol); }}
+                                            >
+                                                {company.symbol}
+                                            </button>
+                                        </td>
                                         <td>${company.price.toFixed(2)}</td>
                                         <td>${(company.marketCap / 1e9).toFixed(2)} B</td>
                                     </tr>
@@ -222,6 +231,7 @@ function GetQuote() {
                         </table>
                     </div>
                 )}
+
             </div>
         </>
     );
