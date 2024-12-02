@@ -10,8 +10,8 @@ function BuyStock() {
 
     async function handleBuyStock(event) {
         event.preventDefault();
-        setError(null); // Reset error messages
-        setResult(null); // Reset previous results
+        setError(null); 
+        setResult(null); 
 
         if (!stock || quantity <= 0) {
             setError("Please enter a valid stock symbol and quantity greater than 0.");
@@ -37,7 +37,7 @@ function BuyStock() {
             }
 
             const data = await response.json();
-            setResult(data); // Show the result to the user
+            setResult(data);
         } catch (err) {
             setError(err.message || "An unexpected error occurred.");
         }

@@ -8,12 +8,10 @@ import "./styles/Home.css"
 function Homepage({ welcome }) {
     return (
         <div className="homepage-container">
-            {/* Logo */}
             <div className="logo-container">
                 <img src={logo} alt="MultiTrader Logo" className="logo" />
             </div>
 
-            {/* Welcome Message and Buttons */}
             <div className="welcome-section">
                 <h1>{welcome.message || "Welcome to MultiTrader"}</h1>
                 <p>Join the world of professional trading. Buy, sell, and manage your portfolio with ease.</p>
@@ -27,7 +25,6 @@ function Homepage({ welcome }) {
                 </div>
             </div>
 
-            {/* Globe Image */}
             <div className="globe-container">
                 <img src={globe} alt="Globe Representing Finance" className="globe-image" />
             </div>

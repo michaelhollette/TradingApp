@@ -33,7 +33,7 @@ function DepositFunds() {
             }
 
             const data = await response.json();
-            setResult(data); // Update the result with the response message
+            setResult(data);
         } catch (err) {
             setError(err.message || "An unexpected error occurred.");
         }

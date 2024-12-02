@@ -32,7 +32,7 @@ function TransactionHistory(){
                     totalPrice: transaction.price * transaction.quantity,
                 }));
     
-                setHistory(enrichedData); // Update state with enriched data
+                setHistory(enrichedData);
             } catch (err) {
                 setError(err.message);
             }
@@ -42,9 +42,9 @@ function TransactionHistory(){
     
 
     const sortData = (key) => {
-        let direction = "asc"; // Default to ascending order
+        let direction = "asc";
         if (sortConfig.key === key && sortConfig.direction === "asc") {
-            direction = "desc"; // Toggle to descending order
+            direction = "desc"; 
         }
     
         const sortedData = [...history].sort((a, b) => {
@@ -75,7 +75,7 @@ function TransactionHistory(){
                                 <th onClick={() => sortData("type")}>Type</th>
                                 <th onClick={() => sortData("quantity")}>Quantity</th>
                                 <th onClick={() => sortData("price")}>Price</th>
-                                <th onClick={() => sortData("totalPrice")}>Total Price</th> {/* Sortable Total Price */}
+                                <th onClick={() => sortData("totalPrice")}>Total Price</th> 
                                 <th onClick={() => sortData("timestamp")}>Date</th>
                                 <th>Time</th>
                             </tr>

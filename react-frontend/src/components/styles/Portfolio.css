@@ -1,25 +1,23 @@
-/* Portfolio Page Container */
 .portfolio-container {
     box-sizing: border-box;
     padding: 20px 20px 50px 20px;
     background-color: #121212;
     color: #f5f5f5;
     text-align: center;
-    min-height: auto; /* Allow dynamic height */
-    height: auto; /* Let it grow based on content */
-    overflow: visible; /* Ensure nothing is clipped */
+    min-height: auto; 
+    height: auto;
+    overflow: visible; 
 }
 
 
 
 [data-highcharts-chart] {
-    overflow: visible !important; /* Allow content to overflow */
-    height: auto !important; /* Let the container adjust its height */
+    overflow: visible !important; 
+    height: auto !important;
 }
 
 
 
-/* Table Styling */
 .portfolio-table {
     width: 100%;
     border-collapse: collapse;
@@ -52,13 +50,11 @@
     text-align: right;
 }
 
-/* Helper Class to Offset Content Below Navbar */
 .offset-navbar {
-    margin-top: 70px; /* Match the navbar height */
+    margin-top: 70px; 
 }
 
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .portfolio-table {
         font-size: 0.9rem;
@@ -67,27 +63,26 @@
 
 .chart-container {
     margin-top: 40px;
-    width: 100%; /* Allow the chart to take full width of the container */
-    max-width: 1200px; /* Set a maximum width for larger screens */
-    height: auto; /* Let the container adjust to the content */
-    margin-left: auto; /* Center horizontally */
-    margin-right: auto; /* Center horizontally */
-    overflow: visible; /* Prevent internal scrolling */
+    width: 100%;
+    max-width: 1200px; 
+    height: auto;
+    margin-left: auto; 
+    margin-right: auto; 
+    overflow: visible; 
 }
 
 
 body {
     margin: 0;
     padding: 0;
-    overflow-y: scroll; /* Allow scrolling */
+    overflow-y: scroll; 
 }
 
 .container {
-    min-height: 150vh; /* Extend content height to 150% of the viewport */
+    min-height: 150vh; 
     background-color: #121212;
 }
 
-/* Modal Styling */
 .modal {
     position: fixed;
     top: 0;
