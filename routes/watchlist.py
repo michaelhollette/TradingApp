@@ -19,8 +19,14 @@ async def get_watchlist(user: User = Depends(get_current_user),
     # Concatenates all symbols bulk API searchp
     symbols = ",".join([item.stock for item in watchlist_items])
 
+    api_key = "FGkzWV4lrs1pDemA6kxNLzE7PdY4elEq"
+    api_key2 ="tXI3IbsvZVPvZhdlB7iyGUbf4YYQJKiZ"
+    api_key3="GhhSe5dXT7x8Sxf71TuPFccL8Ofx0c0b"
+
+
+
     # Fetches current prices for watchlist items 
-    bulk_prices_url = f"https://financialmodelingprep.com/api/v3/quote/{symbols}?apikey=GhhSe5dXT7x8Sxf71TuPFccL8Ofx0c0b"
+    bulk_prices_url = f"https://financialmodelingprep.com/api/v3/quote/{symbols}?apikey={api_key}"
     async with httpx.AsyncClient() as client:
         bulk_prices_response = await client.get(bulk_prices_url)
         bulk_prices_response.raise_for_status()

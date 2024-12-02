@@ -85,8 +85,9 @@ def lookup2(symbol):
     api_key3="GhhSe5dXT7x8Sxf71TuPFccL8Ofx0c0b"
 
     # URLs for the stock price and company overview
-    price_url = f"https://financialmodelingprep.com/api/v3/quote/{symbol}?apikey={api_key3}"
-    overview_url = f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={api_key3}"
+    price_url = f"https://financialmodelingprep.com/api/v3/quote/{symbol}?apikey={api_key}"
+    overview_url = f"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={api_key}"
+    print(price_url)
     
 
     try:
@@ -95,16 +96,16 @@ def lookup2(symbol):
         price_response.raise_for_status()
         price_data = price_response.json()[0]
 
-        # Obtain data for the most recent price
+        # Obtains data for the most recent price
         
         price = price_data["price"]
        
-        # Fetch company overview
+        # Fetches company overview
         overview_response = requests.get(overview_url)
         overview_response.raise_for_status()
         overview_data = overview_response.json()[0]
 
-        # Obtain company name, exchange, sector and industry data
+        # Obtains company name, exchange, sector and industry data
         company_name = overview_data["companyName"]
         company_description = overview_data["description"]
         exchange = overview_data["exchange"]
@@ -122,7 +123,7 @@ def lookup2(symbol):
 
         address = ", ".join(s for s in address_details if s)
 
-        # Return combined result
+        # Returns combined result
         return {"name": company_name, "price": float(price), "symbol": symbol.upper(), "description": company_description, "exchange" : exchange, "sector": sector.capitalize(), "industry": industry.capitalize(), "market_cap": market_cap, "logo": logo_url, "address": address}
     except (requests.RequestException, KeyError, ValueError):
         return None
@@ -131,8 +132,6 @@ def lookup2(symbol):
 
 async def lookup_intraday(symbol):
     current_date = date.today()
-    current_date = current_date - timedelta(days=1)
-
     previous_date = current_date - timedelta(days=1)
 
     current_date_str = current_date.strftime("%Y-%m-%d")
@@ -141,7 +140,7 @@ async def lookup_intraday(symbol):
     api_key = "FGkzWV4lrs1pDemA6kxNLzE7PdY4elEq"
     api_key2 = "tXI3IbsvZVPvZhdlB7iyGUbf4YYQJKiZ"
     api_key3="GhhSe5dXT7x8Sxf71TuPFccL8Ofx0c0b"
-    url = f"https://financialmodelingprep.com/api/v3/historical-chart/30min/{symbol}?from={previous_date_str}&to={current_date_str}&extended=true&apikey={api_key3}"
+    url = f"https://financialmodelingprep.com/api/v3/historical-chart/30min/{symbol}?from={previous_date_str}&to={current_date_str}&extended=true&apikey={api_key}"
     print(url)
 
     try:
@@ -166,7 +165,7 @@ def lookup_daily_history(symbol):
     api_key3="GhhSe5dXT7x8Sxf71TuPFccL8Ofx0c0b"
 
 
-    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?apikey={api_key3}"
+    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{symbol}?apikey={api_key}"
 
     try:
         response = requests.get(url)

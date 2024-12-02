@@ -158,7 +158,7 @@ function GetQuote() {
                         value={symbol}
                         onChange={(e) => setSymbol(e.target.value.toUpperCase())}
                     />
-                    <button onClick={fetchQuote}>Get Quote</button>
+                    <button onClick={() => fetchQuote(symbol)}>Get Quote</button>
                 </div>
                 {error && <p className="error">{error}</p>}
                 {successMessage && <p className="success">{successMessage}</p>}

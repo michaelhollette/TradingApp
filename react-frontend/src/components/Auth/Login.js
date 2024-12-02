@@ -48,12 +48,10 @@ function Login() {
 
     return (
         <div className="login-container">
-            {/* Logo Section */}
             <div className="logo-section">
                 <img src={logo} alt="MultiTrader Logo" className="logo" />
             </div>
 
-            {/* Login Form Section */}
             <div className="login-form-section">
                 <h1 className="login-header">Login</h1>
                 {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}

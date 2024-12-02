@@ -43,12 +43,12 @@ def buy_stock(*, user: User = Depends(get_current_user),
     portfolio_entry = session.exec(query).first()
 
     if portfolio_entry:
-        # Update existing portfolio entry
+        # Updates existing portfolio entry
         portfolio_entry.quantity += transaction.quantity
         portfolio_entry.price = ((portfolio_entry.price * portfolio_entry.quantity)+ total_cost) / (portfolio_entry.quantity + transaction.quantity)  # Update average price
 
     else:
-        # Add a new portfolio entry
+        # Adds a new portfolio entry
         new_portfolio_entry = Portfolio(
             user_id=user.id,
             name = stock_name,

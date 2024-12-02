@@ -47,23 +47,21 @@
     background-color: #333333;
 }
     
-/* Scrollbar for WebKit Browsers (Chrome, Edge, Safari) */
 .transaction-table-container::-webkit-scrollbar {
-    width: 8px; /* Width of the scrollbar */
+    width: 8px; 
 }
 
 .transaction-table-container::-webkit-scrollbar-track {
-    background: #1e1e1e; /* Match background color of the app */
+    background: #1e1e1e; 
 }
 
 .transaction-table-container::-webkit-scrollbar-thumb {
-    background-color: #00acee; /* Match accent color */
-    border-radius: 5px; /* Rounded corners */
-    border: 2px solid #1e1e1e; /* Adds a gap between the thumb and track */
+    background-color: #00acee; 
+    border-radius: 5px; 
+    border: 2px solid #1e1e1e; 
 }
 
-/* Scrollbar for Firefox */
 .transaction-table-container {
-    scrollbar-color: #00acee #1e1e1e; /* Thumb color | Track color */
-    scrollbar-width: thin; /* Makes the scrollbar thinner */
+    scrollbar-color: #00acee #1e1e1e; 
+    scrollbar-width: thin;
 }

@@ -8,7 +8,7 @@ function Navbar() {
     const navigate = useNavigate();
     async function fetchBalance() {
         try {
-            // Fetch user data (including balance)
+            
             const userResponse = await fetch("http://localhost:8000/api/auth/me", {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -32,7 +32,6 @@ function Navbar() {
     }, []);
 
     const handleLogout = () => {
-        // Clear the token and balance from localStorage
         localStorage.removeItem("accessToken");
         localStorage.removeItem("userBalance");
         alert("Logged out successfully!");

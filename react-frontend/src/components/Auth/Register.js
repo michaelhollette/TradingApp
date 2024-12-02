@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
-import logo from "../images/logo.png"; // Update with your logo file name
+import logo from "../images/logo.png"; 
 
 
 function Register() {
@@ -39,8 +39,8 @@ function Register() {
             }
 
             const data = await response.json();
-            alert(data.message); // Inform the user of success
-            navigate("/login"); // Redirect to the login page
+            alert(data.message); 
+            navigate("/login"); 
         } catch (err) {
             setError(err.message || "An unexpected error occurred.");
         }

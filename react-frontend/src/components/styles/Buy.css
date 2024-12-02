@@ -1,7 +1,6 @@
-/* Buy Stock Page */
 .buy-stock-container {
     padding: 20px;
-    margin-top: 70px; /* Offset for the navbar */
+    margin-top: 70px; 
     text-align: center;
     font-family: Arial, sans-serif;
     color: #f5f5f5;

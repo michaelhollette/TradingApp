@@ -23,6 +23,8 @@ async def get_stock_quote(symbol: str):
     """
     Fetch the latest stock price and company name for a given symbol.
     """
+
+    print("Symbol:", symbol)
     result = lookup2(symbol)
     if result is None:
         raise HTTPException(status_code=404, detail="Stock symbol not found or invalid.")
