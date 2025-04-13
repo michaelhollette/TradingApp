@@ -75,7 +75,7 @@ function GetQuote() {
             }
             console.log("Quote: ", quote)
             
-            // Fetches watchlist itemsand data
+            // Fetches (adds) watchlist itemsand data
             const response = await fetch("http://localhost:8000/api/watchlist",{
                 method: "POST",
                 headers: {
