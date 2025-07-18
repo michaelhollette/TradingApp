@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./python-backend
+    container_name: trading-app-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - trading_app_db:/app
+    environment:
+      - TZ=UTC
+
+  frontend:
+    build: ./react-frontend
+    container_name: trading-app-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  trading_app_db:
