@@ -129,6 +129,7 @@ function GetQuote() {
 
     // Chart options
     const chartData = {
+        //x-axis
         labels: history 
             ? history.map((data) => {
                 // Converts string to Date data type and formats

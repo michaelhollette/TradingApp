@@ -6,6 +6,7 @@ from db import get_session
 from schemas import User, UserOutput, Portfolio,  PortfolioOutput, Transaction, TransactionInput, TransactionOutput
 from helpers import lookup2
 from datetime import datetime
+from financial_data.market_data import MarketDataService
 
 
 
@@ -18,19 +19,23 @@ def get_transactions(user: User = Depends(get_current_user),
     return session.exec(query).all()
 
 @router.post("/buy")
-def buy_stock(*, user: User = Depends(get_current_user),
+async def buy_stock(*, user: User = Depends(get_current_user),
               transaction: TransactionInput,
               session: Session = Depends(get_session)):
     if transaction.quantity <= 0:
         raise HTTPException(status_code=400, detail="Quantity must be greater than 0.")
-
-    stock_data=lookup2(transaction.stock) 
+    
+    service = MarketDataService()
+    stock_data = await service.get_finnhub_price(transaction.stock)
     if stock_data is None:
         raise HTTPException(status_code=404, detail="Stock symbol not found.")
     
-    stock_price = round(float(stock_data['price']),2)
-    stock_name = stock_data['name']
+    print("Stock data: ", stock_data)
+
+    stock_price = round(float(stock_data.price),2)
+    stock_name = stock_data.name
     total_cost = round(stock_price * transaction.quantity,2)
+    print("Stock price: ", stock_price)
 
     if user.balance < total_cost:
         raise HTTPException(status_code= 400, detail = "Insufficient funds" )
@@ -38,7 +43,7 @@ def buy_stock(*, user: User = Depends(get_current_user),
     user.balance -= total_cost
 
     query = select(Portfolio).where(
-        Portfolio.user_id == user.id, Portfolio.stock == transaction.stock.upper()
+        Portfolio.user_id == user.id, Portfolio.stock == stock_data.symbol.upper()
     )
     portfolio_entry = session.exec(query).first()
 
@@ -104,25 +109,27 @@ def buy_stock(*, user: User = Depends(get_current_user),
     }
 
 @router.post("/sell")
-def sell_stock(*, user : User = Depends(get_current_user),
+async def sell_stock(*, user : User = Depends(get_current_user),
                transaction: TransactionInput,
                session: Session = Depends(get_session)):
     
     if transaction.quantity <= 0:
         raise HTTPException(status_code=400, detail="Quantity must be greater than 0.")
     
-    stock_data=lookup2(transaction.stock) 
+    service = MarketDataService()
+    stock_data = await service.get_finnhub_price(transaction.stock)
     if stock_data is None:
         raise HTTPException(status_code=404, detail="Stock symbol not found.")
     
-    stock_price = stock_data['price']
-    stock_name = stock_data['name']
+    stock_price = stock_data.price
+    print("Stock price: ", stock_price)
+    stock_name = stock_data.name
 
     total_revenue = stock_price * transaction.quantity
     
     #Check whether user has bough enough stocks
     query = select(Portfolio).where(
-        Portfolio.user_id == user.id, Portfolio.stock == transaction.stock.upper()
+        Portfolio.user_id == user.id, Portfolio.stock == stock_data.symbol.upper()
     )
     portfolio_entry = session.exec(query).first()
     if not portfolio_entry:

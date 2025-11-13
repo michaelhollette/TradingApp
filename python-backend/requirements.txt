@@ -1,5 +1,6 @@
 annotated-types==0.7.0
 anyio==4.6.2.post1
+asyncio==4.0.0
 bcrypt==4.2.0
 certifi==2024.8.30
 charset-normalizer==3.4.0
@@ -9,6 +10,7 @@ dnspython==2.7.0
 email_validator==2.2.0
 fastapi==0.115.5
 fastapi-cli==0.0.5
+finnhub-python==2.4.25
 greenlet==3.1.1
 h11==0.14.0
 httpcore==1.0.7

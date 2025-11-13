@@ -3,6 +3,7 @@ version: '3.8'
 services:
   backend:
     build: ./python-backend
+    image: mhollette/trading-application:backend
     container_name: trading-app-api
     ports:
       - "8000:8000"
@@ -13,6 +14,7 @@ services:
 
   frontend:
     build: ./react-frontend
+    image: mhollette/trading-application:frontend
     container_name: trading-app-frontend
     ports:
       - "3000:80"
