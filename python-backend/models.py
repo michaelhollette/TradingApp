@@ -13,13 +13,13 @@ class CompanyData(BaseModel):
     name: str
     price: float
     symbol: str
-    description: str
+    description: str | None = None 
     exchange: str   
     sector: str
     industry: str
-    market_cap: float
+    market_cap: float 
     logo: str      
-    address: str    
+    address: str | None = None 
 
 
 class StockHistory(BaseModel):
@@ -42,3 +42,9 @@ class PortfolioOutput(BaseModel):
     quantity: int
     avg_price: float
     current_price: float | None = None
+
+class CompanyMarketInfo(BaseModel):
+    symbol: str
+    name: str
+    market_cap: float
+    price: float

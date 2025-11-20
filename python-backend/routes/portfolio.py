@@ -4,11 +4,10 @@ from starlette import status
 from routes.auth import get_current_user
 from db import get_session
 from schemas import User, UserOutput, Portfolio,  PortfolioOutput
-from helpers import lookup2, lookup_daily_history
 import requests
 from financial_data.market_data import MarketDataService 
 from typing import Annotated
-from models import StockHistoryData
+from models import StockHistoryData, CompanyMarketInfo
 
 router = APIRouter(prefix="/portfolio", tags=["Portfolio"])
 
@@ -79,3 +78,11 @@ async def get_stock_history(symbol: str)-> StockHistoryData:
         raise HTTPException(status_code=404, detail="Stock symbol not found or invalid.")
     return result
 
+@router.get("/top-companies", response_model=list[CompanyMarketInfo])
+async def get_top_companies_by_market_cap(
+    limit: int = 10,
+    exchange: str = "NASDAQ"
+):
+    service = MarketDataService()
+    companies = await service.get_companies_by_market_cap(limit=limit, exchange=exchange)
+    return companies    

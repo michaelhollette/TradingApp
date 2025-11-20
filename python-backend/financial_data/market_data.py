@@ -3,7 +3,7 @@ from fastapi import Depends, HTTPException, APIRouter
 from datetime import date, timedelta
 import httpx
 import asyncio
-from models import CompanyData, StockData, StockPrice, StockHistoryData, StockHistory
+from models import CompanyData, StockData, StockPrice, StockHistoryData, StockHistory, CompanyMarketInfo
 import finnhub
 
 class MarketDataService:
@@ -206,4 +206,27 @@ class MarketDataService:
             return None
 
 
+    async def get_companies_by_market_cap(self, limit: int = 10, exchange: str = "NASDAQ") -> list[CompanyMarketInfo]:
+        try:
+            url = f"{self.fmp_company_base_url}/company-screener?exchange={exchange}&apikey={self.fmp_api_key}&limit={limit}&sort=marketCap&order=desc"
+            print(f"Fetching top {limit} companies by market cap from FMP on exchange {exchange}")
+            async with httpx.AsyncClient() as client:
+                response = await client.get(url)
+                response.raise_for_status()
+                print("Request successful")
 
+                data = response.json()
+                companies = []
+                for company_info in data:
+                    companies.append(
+                        CompanyMarketInfo(
+                            symbol=company_info["symbol"],
+                            name=company_info["companyName"],
+                            market_cap=company_info["marketCap"],
+                            price=company_info["price"]
+                        )
+                    )
+                return companies
+            
+        except (httpx.RequestError, KeyError, ValueError):
+            return None
