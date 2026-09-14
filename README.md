@@ -54,27 +54,30 @@ FastAPI: 0.115
 ## Getting Started
 
 ### Docker (recommended)
-**bash
+
+```bash
 docker-compose up --build
+```
 
+Frontend: http://localhost:3000 · Backend: http://localhost:8000
 
-Frontend runs on
-### Local dev
+### Local development
 
+**Backend**
 
-**Backend:**
-•bash cd python-backend
-pip install -r requirements.txt uvicorn app:app--reload
-http://localhost:3000, backend on http://localhost: 8000°
+```bash
+cd python-backend
+pip install -r requirements.txt
+uvicorn app:app --reload
+```
 
+**Frontend**
 
-**Frontend:**
-***bash cd react-frontend npm install
-npm
-start
-### API Keys
-
-
+```bash
+cd react-frontend
+npm install
+npm start
+```
 
 
 ### API Keys
