@@ -10,8 +10,9 @@ Built with React + FastAPI + SQLite.
 
  
 
-![Python](https://img.shields.io/badge/Python-3.12-blue) ![React](https://img.shields.io/badge/React-18-61dafb) ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688)
-
+Python: 3.12
+React: 18
+FastAPI: 0.115
  
 
 ## Features
